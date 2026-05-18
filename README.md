@@ -46,17 +46,16 @@ This Keycloak extension enables email-based two-factor authentication by sending
 ## ✨ Features
 
 - ✅ Email-based OTP authentication
-- ✅ **Multiple email provider support** (Keycloak SMTP, SendGrid, AWS SES)
+- ✅ **Multiple email provider support** (Keycloak SMTP, SendGrid, AWS SES, Mailgun)
 - ✅ **Automatic fallback** to Keycloak SMTP if primary provider fails
 - ✅ **SendGrid integration** with API key authentication
 - ✅ **AWS SES integration** with IAM credentials and regional support
+- ✅ **Mailgun integration** with REST API, US and EU region support
 - ✅ Customizable email templates
 - ✅ Conditional authentication flows
 - ✅ Multi-stage Docker build support
 - ✅ Compatible with Keycloak 26.x
 - ✅ Easy integration with existing authentication flows
-
-\* *Mailgun support coming soon*
 
 ---
 
@@ -265,7 +264,7 @@ The authenticator supports multiple email service providers for enhanced flexibi
 | **Keycloak SMTP** (Default) | Uses Keycloak's built-in SMTP configuration | Realm SMTP settings configured |
 | **SendGrid** | SendGrid cloud email service | SendGrid API key and from email |
 | **AWS SES** | Amazon Simple Email Service | AWS credentials, region, and verified sender |
-| **Mailgun** | Mailgun email delivery service | *Coming soon* |
+| **Mailgun** | Mailgun email delivery service | Mailgun API key, sending domain, and from email |
 
 ---
 
@@ -360,6 +359,17 @@ AWS SES From Name: Your Company Name  (optional)
 Enable Fallback to Keycloak SMTP: true  (recommended)
 ```
 
+**Option 4: Use Mailgun**
+```
+Email Provider: MAILGUN
+Mailgun API Key: key-xxxxxxxxxxxxxxxxxxxx
+Mailgun Domain: mg.yourdomain.com
+Mailgun From Email: noreply@yourdomain.com
+Mailgun From Name: Your Company Name  (optional)
+Mailgun Region: US  (or EU for European accounts)
+Enable Fallback to Keycloak SMTP: true  (recommended)
+```
+
 #### SendGrid Setup
 
 1. **Get SendGrid API Key:**
@@ -409,6 +419,30 @@ Enable Fallback to Keycloak SMTP: true  (recommended)
    - Enter IAM secret access key
    - Enter verified sender email
    - Optionally set sender display name
+
+#### Mailgun Setup
+
+1. **Get Mailgun API Key:**
+   - Sign up at [Mailgun](https://www.mailgun.com/)
+   - Navigate to **Settings** → **API Keys** → **Add new key**
+   - Copy the Private API key (starts with `key-`)
+
+2. **Set Up Sending Domain:**
+   - Navigate to **Sending** → **Domains** → **Add New Domain**
+   - Use a subdomain like `mg.yourdomain.com` for best deliverability
+   - Follow the DNS verification steps (MX, TXT, CNAME records)
+
+3. **Choose Region:**
+   - If your Mailgun account was created at `app.mailgun.com` → use `US` region
+   - If your account was created at `app.eu.mailgun.com` → use `EU` region
+
+4. **Configure in Keycloak:**
+   - Select `MAILGUN` from Email Provider dropdown
+   - Enter your Private API key in **Mailgun API Key**
+   - Enter your verified sending domain in **Mailgun Domain** (e.g., `mg.example.com`)
+   - Enter the sender address in **Mailgun From Email**
+   - Optionally set a sender display name
+   - Select the correct **Mailgun Region** (US or EU)
 
 #### Fallback Mechanism
 

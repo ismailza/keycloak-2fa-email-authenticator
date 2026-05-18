@@ -152,6 +152,43 @@ public final class EmailConstants {
 	 */
 	public static final boolean DEFAULT_ENABLE_FALLBACK = true;
 
+	// Mailgun Configuration
+
+	/**
+	 * Configuration key for Mailgun API key.
+	 * Required when EMAIL_PROVIDER_TYPE is set to MAILGUN.
+	 */
+	public static final String MAILGUN_API_KEY = "mailgunApiKey";
+
+	/**
+	 * Configuration key for Mailgun sending domain (e.g., mg.example.com).
+	 * Required when EMAIL_PROVIDER_TYPE is set to MAILGUN.
+	 */
+	public static final String MAILGUN_DOMAIN = "mailgunDomain";
+
+	/**
+	 * Configuration key for Mailgun sender email address.
+	 * Required when EMAIL_PROVIDER_TYPE is set to MAILGUN.
+	 */
+	public static final String MAILGUN_FROM_EMAIL = "mailgunFromEmail";
+
+	/**
+	 * Configuration key for Mailgun sender display name.
+	 * Optional, defaults to the from email address.
+	 */
+	public static final String MAILGUN_FROM_NAME = "mailgunFromName";
+
+	/**
+	 * Configuration key for Mailgun API region.
+	 * Valid values: "US" (default) or "EU".
+	 */
+	public static final String MAILGUN_REGION = "mailgunRegion";
+
+	/**
+	 * Default Mailgun region (US).
+	 */
+	public static final String DEFAULT_MAILGUN_REGION = "US";
+
 	/**
 	 * Configuration key for skipping the setup required action.
 	 * When enabled, users with an email address are considered configured
