@@ -1,0 +1,80 @@
+---
+title: Introduction
+sidebar_position: 1
+description: Overview, features, and prerequisites for Keycloak 2FA Email Authenticator
+---
+
+# Keycloak 2FA Email Authenticator
+
+A professional Keycloak Authentication Provider implementation for two-factor authentication (2FA) using One-Time Passwords (OTP) delivered via email. Supports multiple email providers: Keycloak SMTP, SendGrid, AWS SES, and Mailgun.
+
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.mesutpiskin/keycloak-2fa-email-authenticator.svg)](https://central.sonatype.com/artifact/io.github.mesutpiskin/keycloak-2fa-email-authenticator)
+[![Java Version](https://img.shields.io/badge/Java-21-orange.svg)](https://adoptium.net/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://github.com/mesutpiskin/keycloak-2fa-email-authenticator/blob/main/LICENSE)
+
+## Overview
+
+This Keycloak extension enables email-based two-factor authentication by sending a verification code (OTP) to the user's registered email address during login. The authenticator integrates seamlessly with Keycloak's authentication flow system.
+
+**Key capabilities:**
+
+- Send OTP codes via multiple email providers
+- Flexible provider selection with automatic fallback to Keycloak SMTP
+- Fully customizable email templates (HTML + text)
+- Conditional authentication flow support
+- Works with Keycloak's built-in flow builder
+
+## Features
+
+| Feature                                                            | Status |
+| ------------------------------------------------------------------ | ------ |
+| Email-based OTP authentication                                     | ✅     |
+| Multiple email provider support (SMTP, SendGrid, AWS SES, Mailgun) | ✅     |
+| Automatic fallback to Keycloak SMTP                                | ✅     |
+| SendGrid API key authentication                                    | ✅     |
+| AWS SES with IAM credentials and region support                    | ✅     |
+| Mailgun REST API with US/EU region support                         | ✅     |
+| Customizable email HTML templates                                  | ✅     |
+| Conditional authentication flows                                   | ✅     |
+| Multi-stage Docker build                                           | ✅     |
+| Keycloak 26.x compatible                                           | ✅     |
+| 11 built-in language translations                                  | ✅     |
+
+## Prerequisites
+
+### Local Build
+
+- **Java 21+** — [Download from Adoptium](https://adoptium.net/)
+- **Maven 3.9+** — [Download from Apache](https://maven.apache.org/download.cgi)
+
+### Docker / Podman
+
+- **Docker** — [Download](https://www.docker.com/) or **Podman** — [Download](https://podman.io/)
+- (Optional) Docker Compose or Podman Compose
+
+## Install via Maven Central
+
+The easiest way to get the JAR — no build required:
+
+```xml title="Maven"
+<dependency>
+  <groupId>io.github.mesutpiskin</groupId>
+  <artifactId>keycloak-2fa-email-authenticator</artifactId>
+  <version>26.4.0-KC26.6.1</version>
+</dependency>
+```
+
+```groovy title="Gradle"
+implementation 'io.github.mesutpiskin:keycloak-2fa-email-authenticator:26.4.0-KC26.6.1'
+```
+
+:::tip Version format
+`<plugin-version>-KC<keycloak-version>` — e.g. `26.4.0-KC26.6.1` targets Keycloak 26.6.1.
+Browse all versions on [Maven Central](https://central.sonatype.com/artifact/io.github.mesutpiskin/keycloak-2fa-email-authenticator).
+:::
+
+## Next Steps
+
+import DocCardList from "@theme/DocCardList";
+
+<DocCardList />
