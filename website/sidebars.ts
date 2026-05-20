@@ -20,6 +20,7 @@ const sidebars: SidebarsConfig = {
       ],
     },
     "local-testing",
+    "localization",
     "contributing",
   ],
 };

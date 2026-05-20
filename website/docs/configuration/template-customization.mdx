@@ -69,34 +69,6 @@ emailCodeBody=Here is your one-time password: {0}.\n\nValid for {1} minutes. Do 
 After editing templates or properties files, rebuild and redeploy: `mvn clean package`.
 :::
 
-## Supported Languages
+## Supported Languages & Adding Translations
 
-| Language              | Code    | Status |
-| --------------------- | ------- | ------ |
-| English               | `en`    | ✅     |
-| Turkish               | `tr`    | ✅     |
-| French                | `fr`    | ✅     |
-| Italian               | `it`    | ✅     |
-| Spanish               | `es`    | ✅     |
-| Danish                | `da`    | ✅     |
-| German                | `de`    | ✅     |
-| Russian               | `ru`    | ✅     |
-| Azerbaijani           | `az`    | ✅     |
-| Arabic                | `ar`    | ✅     |
-| Chinese (Traditional) | `zh_TW` | ✅     |
-
-## Adding a New Language
-
-```bash
-# 1. Navigate to messages directory
-cd src/main/resources/theme-resources/messages/
-
-# 2. Copy English file
-cp messages_en.properties messages_ja.properties
-
-# 3. Translate values (keep keys unchanged)
-# 4. Build and test
-mvn clean package
-```
-
-Then [submit a PR](../contributing) with your translation file.
+The authenticator ships with 11 built-in languages. For the full list, how to add a new language, and a complete translation keys reference, see the [Localization guide](../localization).

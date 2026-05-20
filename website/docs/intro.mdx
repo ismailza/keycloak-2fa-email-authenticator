@@ -40,6 +40,28 @@ This Keycloak extension enables email-based two-factor authentication by sending
 | Keycloak 26.x compatible                                           | ✅     |
 | 11 built-in language translations                                  | ✅     |
 
+## How It Works
+
+Once installed and configured, the authenticator adds a second step to Keycloak's login flow:
+
+1. **User submits username + password** — standard Keycloak first factor
+2. **OTP code is generated** — a time-limited numeric code is created server-side
+3. **Email is sent** — the code is delivered via your chosen provider (SMTP, SendGrid, AWS SES, or Mailgun)
+4. **User enters the code** — a verification form appears in the browser
+5. **Code is validated** — on success, the session is established; on failure, the user can retry or request a new code
+
+```
+[Login page] → username + password
+      ↓
+[Email OTP step] → code emailed to user
+      ↓
+[OTP form] → user enters code
+      ↓
+[Keycloak session granted]
+```
+
+The authenticator integrates as a standard Keycloak SPI, so it works alongside any existing authentication policies, conditional flows, and realm settings.
+
 ## Prerequisites
 
 ### Local Build
