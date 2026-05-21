@@ -24,7 +24,9 @@ const config: Config = {
   projectName: "keycloak-2fa-email-authenticator",
   trailingSlash: false,
 
-  onBrokenLinks: "warn",
+  onBrokenLinks: "throw",
+  onBrokenMarkdownLinks: "throw",
+  onBrokenAnchors: "warn",
 
   i18n: {
     defaultLocale: "en",
