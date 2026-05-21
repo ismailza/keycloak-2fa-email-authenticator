@@ -21,6 +21,7 @@ const sidebars: SidebarsConfig = {
     },
     "local-testing",
     "localization",
+    "troubleshooting",
     "contributing",
   ],
 };

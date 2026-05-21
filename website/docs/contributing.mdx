@@ -1,6 +1,6 @@
 ---
 title: Contributing
-sidebar_position: 5
+sidebar_position: 6
 description: How to contribute — translations, bug reports, features, and pull requests
 ---
 
@@ -78,46 +78,7 @@ import TabItem from "@theme/TabItem";
   </TabItem>
   <TabItem value="keys" label="Translation Keys">
 
-```properties
-# OTP form UI
-resendCode=Resend Code
-emailOtpForm=Please enter the {0} digit code that was delivered to your email.
-
-# Email content
-emailCodeSubject={0} access code
-emailCodeBody=Access code: {0}.\n\nThis code will expire within {1} seconds.
-emailCodeBodyHtml=<p>Access code: <strong>{0}</strong>.</p><p>This code will expire within <strong>{1}</strong> seconds.</p>
-
-# Authenticator metadata
-email-authenticator-display-name=Email Authenticator
-email-authenticator-help-text=Receive a one-time verification code by email.
-
-# Setup flow
-email-authenticator-setup-title=Set up Email Authenticator
-email-authenticator-setup-description=Use this option to receive one-time verification codes via email during sign-in.
-email-authenticator-setup-button=Enable Email Authenticator
-email-authenticator-setup-cancelled=Email authenticator setup cannot be cancelled.
-email-authenticator-setup-error=We couldn't enable Email Authenticator. Try again or contact support.
-email-authenticator-setup-missing-email=Add an email address to your account before enabling Email Authenticator.
-
-# Setup verification flow
-email-authenticator-setup-verify-title=Verify your email
-email-authenticator-setup-verify-description=Enter the verification code sent to your email address.
-email-authenticator-setup-verify-button=Verify
-email-authenticator-setup-send-error=Failed to send verification email. Please try again.
-email-authenticator-setup-code-expired=The verification code has expired. Please request a new one.
-email-authenticator-setup-code-invalid=The verification code is incorrect. Please try again.
-email-authenticator-setup-code-missing=Please enter the verification code.
-email-authenticator-setup-too-many-attempts=Too many incorrect attempts. Please request a new code.
-
-# Rate limiting & brute force
-email-authenticator-resend-cooldown=Please wait {0} seconds before requesting a new code.
-email-authenticator-too-many-attempts=Too many incorrect attempts. Please request a new code.
-```
-
-:::note
-`{0}` and `{1}` are runtime placeholders — translate the surrounding text only.
-:::
+See the [Localization page](./localization#translation-keys-reference) for the full reference of all keys with descriptions and placeholders.
 
   </TabItem>
 </Tabs>
