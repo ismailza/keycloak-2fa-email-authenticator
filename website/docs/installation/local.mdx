@@ -46,9 +46,6 @@ mvn clean package -DskipTests
 
 ## Step 4 — Deploy to Keycloak
 
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
-
 <Tabs>
   <TabItem value="standard" label="Standard Installation" default>
 
@@ -70,9 +67,25 @@ cp target/keycloak-2fa-email-authenticator-*.jar /opt/keycloak/providers/
 
 After copying the JAR, register the provider:
 
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+<Tabs>
+  <TabItem value="linux-mac" label="Linux / macOS" default>
+
 ```bash
 <KEYCLOAK_HOME>/bin/kc.sh build
 ```
+
+  </TabItem>
+  <TabItem value="windows" label="Windows">
+
+```bat
+<KEYCLOAK_HOME>\bin\kc.bat build
+```
+
+  </TabItem>
+</Tabs>
 
 ## Running Tests
 

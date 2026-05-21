@@ -21,8 +21,10 @@ All commands work with both Docker and Podman — substitute as needed.
 ## Quick Start
 
 ```bash
-# 1. Build the JAR
-export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+# 1. Build the JAR (macOS: set JAVA_HOME if needed)
+# macOS:  export JAVA_HOME=$(/usr/libexec/java_home -v 21)
+# Linux:  export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+# Windows: set JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-21...
 mvn clean package
 
 # 2. Build image
@@ -226,8 +228,28 @@ podman logs -f keycloak-test | grep "SIMULATION MODE"
 
 ### Test 6 — Language Support
 
-Change language on the login page to test all 11 translations:
-English · Turkish · German · French · Italian · Spanish · Russian · Arabic · Danish · Azerbaijani · Chinese (Traditional)
+Verify that all 11 built-in translations display correctly.
+
+**Enable internationalization in Keycloak:**
+
+1. Admin console → your realm → **Realm Settings** → **Localization** tab
+2. Enable **Internationalization**
+3. Add the languages you want to test (e.g. `fr`, `de`, `ar`)
+4. Set a **Default Locale**
+5. Save
+
+**Test a specific language:**
+
+1. Open the login page: `http://localhost:8080/realms/test/account`
+2. A language selector appears at the bottom of the form — pick a language
+3. Log in as `testuser` and go through the OTP step
+4. Verify that the form labels, button text, and OTP email subject/body are all in the selected language
+
+**Supported languages:** English · Turkish · German · French · Italian · Spanish · Russian · Arabic · Danish · Azerbaijani · Chinese (Traditional)
+
+:::tip
+For right-to-left languages (Arabic), also verify that the Keycloak login page renders the layout correctly in RTL mode.
+:::
 
 ---
 
