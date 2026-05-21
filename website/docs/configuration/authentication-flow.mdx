@@ -29,59 +29,164 @@ See [Email Provider Configuration](https://www.keycloak.org/docs/latest/server_a
 
 ### a) Copy the Browser Flow
 
-1. Navigate to **Authentication** → **Flows**
-2. Select the **"Browser"** flow
-3. Click **"Copy"** → name it `"Browser with Email OTP"`
+1. Navigate to **Authentication**
+2. Inside the **Flows** tab, locate the **Browser** flow
+3. Click the **"⋮" (overflow) menu**
+4. Select **"Duplicate"**
 
-### b) Add the Email OTP Step
+![Keycloak Authentication Flows list — duplicate the Browser flow](/img/screenshots/auth-flows-duplicate.png)
 
-In the `"Browser with Email OTP"` flow:
+5. Name it `"Browser with Email OTP"`
+6. Click **"Duplicate"** to create the new flow
 
-1. Select **"Browser with Email OTP Forms"**
+![Keycloak Authentication Flows list — name the copy of Browser flow](/img/screenshots/name-duplicated-flow.png)
+
+### b) Add the OTP Execution
+
+Inside the copied flow, locate the **"Browser with Email OTP Forms - Conditional 2FA"** sub-flow. This is where the OTP step lives alongside username/password.
+
+1. Click **"+" Add** on the right side of the **Forms** row
 2. Click **"Add execution"**
-3. Select **"Email OTP"** (the provider from this project)
+
+![Add execution button inside the Forms sub-flow](/img/screenshots/auth-flow-add-execution.png)
+
+Choose your execution type depending on whether you want OTP for all users or only some:
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+<Tabs>
+  <TabItem value="email-otp" label="Email OTP" default>
+
+**Use this when:** you want OTP enforced for every user, every login — no conditions.
+
+3. Search for and select **"Email OTP"**
 4. Click **"Add"**
 
-### c) Set the Requirement
+![Selecting Email OTP from the execution list](/img/screenshots/auth-flow-add-email-otp-step.png)
 
-On the **"Email OTP"** row, set the requirement to:
+5. On the **"Email OTP"** row, set the requirement:
 
-- **REQUIRED** — always prompts for OTP on every login
-- **CONDITIONAL** — only prompts based on a condition evaluator
+| Requirement | Behaviour |
+|-------------|-----------|
+| **REQUIRED** | Every login always prompts for an OTP code |
+| **ALTERNATIVE** | OTP is offered but skipped if another factor already satisfies the flow |
+| **DISABLED** | OTP step is never triggered |
 
-### d) Bind the Flow
+![Setting the requirement on the Email OTP row](/img/screenshots/auth-flow-set-requirement.png)
 
-Under the **Bindings** tab:
+:::tip
+Use **REQUIRED** for the strictest security. Use **ALTERNATIVE** only if you have other authenticators in the same flow that can substitute for OTP.
+:::
 
-- **Browser Flow** → select `"Browser with Email OTP"`
-- Click **"Save"**
+  </TabItem>
+  <TabItem value="conditional-email-otp" label="Conditional Email OTP">
 
-### Example Flow
+**Use this when:** you want OTP triggered only for certain users — for example, users with a specific role, or using a specific attribute, etc.
 
-![Authentication Flow Example](/img/otp-form.png)
+:::note
+The settings details will be covered in the [next section](#step-3--configure-email-otp-settings).
+:::
+
+3. Search for and select **"Conditional Email OTP"**
+4. Click **"Add"**
+
+![Selecting Conditional Email OTP from the execution list](/img/screenshots/auth-flow-add-conditional-otp-step.png)
+
+A sub-flow appears with the condition executions inside it.
+
+![Conditional Email OTP sub-flow with condition slots](/img/screenshots/conditional-otp-conditions.png)
+
+5. Click **"Add condition"** inside the **Conditional Email OTP** sub-flow
+6. Choose a condition type:
+
+| Condition | Behaviour |
+|-----------|-----------|
+| **Condition - User Configured** | OTP only fires for users who have already set up this authenticator |
+| **Condition - User Role** | OTP only fires for users belonging to a specific realm or client role |
+
+7. Click **"Add"**, then click **⚙️** on the condition row to configure it (e.g. select the target role)
+
+![Configuring the condition on the Conditional Email OTP sub-flow](/img/screenshots/conditional-otp-add-condition.png)
+
+:::tip
+If you need OTP for all users with no conditions, use the **Email OTP** tab instead — it is simpler to configure and maintain.
+:::
+
+  </TabItem>
+</Tabs>
+
+### c) Bind the Flow
+
+1. At the top right of the flow editor, click the **"Actions"** menu
+2. Select **"Bind flow"**
+
+![Binding the new flow to the Browser flow](/img/screenshots/auth-flow-bind.png)
+
+3. Set **Binding type** to **Browser flow**
+4. Click **"Save"**
+
+![Binding the new flow to the Browser flow](/img/screenshots/auth-flow-bind-save.png)
+
+After binding, the new flow will replace the default Browser flow for all browser-based logins.
+
+![Binding the new flow to the Browser flow](/img/screenshots/auth-flow-bind-success.png)
+
+### Resulting Flow Structure
+
+After completing the above steps, when users log in through the browser, after successfully entering their username
+and password, they will be prompted to enter an OTP code sent to their email (if they have one configured and the
+requirement is met).
+
+![Completed authentication flow with Email OTP step](/img/screenshots/otp-form.png)
 
 ## Step 3 — Configure Email OTP Settings
 
-Click the **⚙️ Settings** icon on the **"Email OTP"** row:
+Click the **⚙️ Settings** icon on the **"Email OTP"** row to open the authenticator configuration panel.
 
-| Setting               | Description                                                                                      | Default |
-| --------------------- | ------------------------------------------------------------------------------------------------ | ------- |
-| **Code length**       | Number of OTP digits                                                                             | `6`     |
-| **Time-to-live**      | Seconds before code expires                                                                      | `300`   |
-| **Simulation mode**   | Log codes instead of sending emails                                                              | `false` |
-| **Resend cooldown**   | Seconds before user can request a new code                                                       | `30`    |
-| **Max code attempts** | Invalid attempts allowed before code is invalidated and a new one must be requested              | `5`     |
-| **Skip setup**        | Users with an existing email skip the enrollment required action — useful for admin-enforced 2FA | `true`  |
+![Email OTP settings panel](/img/screenshots/otp-settings.png)
 
-:::tip Development tip — Simulation Mode
-Set **Simulation mode** to `true` to test without sending real emails. Codes appear in the container logs:
+### Settings reference
+
+| Setting | Description | Default | Recommended (prod) |
+| --- | --- | --- | --- |
+| **Code length** | Number of digits in the OTP code | `6` | `6` |
+| **Time-to-live** | Seconds before the code expires | `300` | `300` |
+| **Simulation mode** | Log codes to server logs instead of sending emails | `false` | `false` |
+| **Resend cooldown** | Seconds a user must wait before requesting a new code | `30` | `60` |
+| **Max code attempts** | Wrong attempts allowed before the code is invalidated | `5` | `3` |
+| **Skip setup** | Skip enrollment for users who already have an email address | `true` | `true` |
+
+### Setting details
+
+#### Code length
+Controls how many digits are in the OTP. `6` is the industry standard and what users expect. Increasing to `8` adds marginal security at the cost of more user errors.
+
+#### Time-to-live
+How long (in seconds) the code remains valid after being sent. `300` seconds (5 minutes) is a good balance between security and usability. If your users report codes expiring too quickly (e.g. they check email on a slow device), increase to `600`.
+
+#### Simulation mode
+When `true`, no email is sent — the OTP code is written to the Keycloak server log instead. Use this during development and local testing to avoid needing a real mail server.
 
 ```bash
-podman logs -f keycloak-test | grep "SIMULATION MODE"
+docker logs keycloak | grep "SIMULATION MODE"
 # ***** SIMULATION MODE ***** Email code send to test@example.com for user testuser is: 123456
 ```
 
+:::warning
+Never enable simulation mode in production — codes are visible in plain text in the logs.
 :::
+
+#### Resend cooldown
+Prevents users from spamming the "Resend code" button. The default of `30` seconds is fine for development; increase to `60` in production to reduce email abuse.
+
+#### Max code attempts
+After this many wrong attempts, the current code is invalidated and the user must request a new one. Lower values (e.g. `3`) make brute-forcing harder but may frustrate users who mistype frequently.
+
+#### Skip setup
+When `true`, users who already have an email address on their Keycloak account skip the enrollment required action and go straight to the OTP prompt. This is the recommended setting when an admin has enforced 2FA for existing users — they are not forced through a setup wizard on their next login.
+
+When `false`, every user must explicitly enroll before they can use email OTP, even if they already have an email on their account.
 
 ## What's Next?
 
