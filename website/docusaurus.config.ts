@@ -13,6 +13,9 @@ const config: Config = {
 
   markdown: {
     mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: "throw",
+    },
   },
 
   themes: ["@docusaurus/theme-mermaid"],
@@ -25,7 +28,6 @@ const config: Config = {
   trailingSlash: false,
 
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "throw",
   onBrokenAnchors: "warn",
 
   i18n: {
