@@ -6,6 +6,11 @@ on:
       - main
     paths:
       - "website/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "website/**"
   workflow_dispatch:
 
 permissions:
@@ -14,7 +19,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -46,14 +51,17 @@ jobs:
         run: pnpm build
 
       - name: Setup Pages
+        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: website/build
 
   deploy:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     needs: build
     environment:

@@ -13,6 +13,10 @@ const config: Config = {
 
   markdown: {
     mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: "throw",
+      onBrokenMarkdownImages: "throw",
+    },
   },
 
   themes: ["@docusaurus/theme-mermaid"],
@@ -20,11 +24,12 @@ const config: Config = {
   url: "https://mesutpiskin.github.io",
   baseUrl: "/keycloak-2fa-email-authenticator/",
 
-  organizationName: "io.github.mesutpiskin",
+  organizationName: "mesutpiskin",
   projectName: "keycloak-2fa-email-authenticator",
   trailingSlash: false,
 
-  onBrokenLinks: "warn",
+  onBrokenLinks: "throw",
+  onBrokenAnchors: "warn",
 
   i18n: {
     defaultLocale: "en",
