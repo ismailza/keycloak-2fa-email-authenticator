@@ -159,6 +159,8 @@ public class EmailAuthenticatorRequiredAction implements RequiredActionProvider,
                     resetSetupCode(session);
                     var form = context.form();
                     form.setAttribute("maxAttemptsReached", true);
+                    form.setAttribute("codeLength", resolvePositiveInt(configMap, EmailConstants.CODE_LENGTH,
+                            EmailConstants.DEFAULT_LENGTH));
                     form.setError(Messages.TOO_MANY_ATTEMPTS);
                     context.challenge(form.createForm(VERIFY_TEMPLATE));
                 } else {
@@ -305,6 +307,10 @@ public class EmailAuthenticatorRequiredAction implements RequiredActionProvider,
         if (remaining != null && remaining > 0L) {
             form.setAttribute("resendAvailableInSeconds", remaining);
         }
+
+        Map<String, String> configMap = findAuthenticatorConfig(context);
+        int codeLength = resolvePositiveInt(configMap, EmailConstants.CODE_LENGTH, EmailConstants.DEFAULT_LENGTH);
+        form.setAttribute("codeLength", codeLength);
 
         if (error != null) {
             form.setError(error, errorParams);
