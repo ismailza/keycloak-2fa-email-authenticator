@@ -228,6 +228,83 @@ class EmailAuthenticatorFormTest {
         }
     }
 
+
+    @Nested
+    @DisplayName("Masked email exposure tests")
+    class MaskedEmailExposureTests {
+
+        private BfpTestableForm form;
+        private AuthenticationFlowContext context;
+        private UserModel user;
+        private AuthenticationSessionModel session;
+        private LoginFormsProvider loginForm;
+        private AuthenticationExecutionModel execution;
+        private AuthenticatorConfigModel config;
+
+        @BeforeEach
+        void setUp() {
+            form = new BfpTestableForm();
+            context = mock(AuthenticationFlowContext.class);
+            user = mock(UserModel.class);
+            session = mock(AuthenticationSessionModel.class);
+            loginForm = mock(LoginFormsProvider.class);
+            execution = mock(AuthenticationExecutionModel.class);
+            config = mock(AuthenticatorConfigModel.class);
+
+            when(context.getUser()).thenReturn(user);
+            when(context.getAuthenticationSession()).thenReturn(session);
+            when(context.form()).thenReturn(loginForm);
+            when(context.getExecution()).thenReturn(execution);
+            when(execution.getId()).thenReturn("test-exec");
+            when(loginForm.setExecution(anyString())).thenReturn(loginForm);
+            when(loginForm.setAttribute(anyString(), any())).thenReturn(loginForm);
+            when(loginForm.createForm(anyString())).thenReturn(mock(Response.class));
+            when(context.getAuthenticatorConfig()).thenReturn(config);
+            when(session.getAuthNote(EmailConstants.CODE)).thenReturn(OtpHashUtils.hash("123456"));
+            when(session.getAuthNote(EmailConstants.CODE_TTL)).thenReturn(String.valueOf(System.currentTimeMillis() + 300_000));
+            when(session.getAuthNote(EmailConstants.CODE_RESEND_AVAILABLE_AFTER)).thenReturn(null);
+        }
+
+        @Test
+        @DisplayName("Should expose masked email when enabled")
+        void shouldExposeMaskedEmailWhenEnabled() {
+            when(user.getEmail()).thenReturn("username@example.com");
+            when(config.getConfig()).thenReturn(Map.of(
+                    EmailConstants.SHOW_MASKED_EMAIL_ON_OTP_FORM, "true",
+                    EmailConstants.CODE_LENGTH, "6"));
+
+            form.authenticate(context);
+
+            verify(loginForm).setAttribute("maskedEmail", "u***e@example.com");
+        }
+
+        @Test
+        @DisplayName("Should not expose masked email when disabled")
+        void shouldNotExposeMaskedEmailWhenDisabled() {
+            when(user.getEmail()).thenReturn("username@example.com");
+            when(config.getConfig()).thenReturn(Map.of(
+                    EmailConstants.SHOW_MASKED_EMAIL_ON_OTP_FORM, "false",
+                    EmailConstants.CODE_LENGTH, "6"));
+
+            form.authenticate(context);
+
+            verify(loginForm, never()).setAttribute(eq("maskedEmail"), any());
+        }
+
+        @Test
+        @DisplayName("Should expose masked email for short local parts")
+        void shouldExposeMaskedEmailForShortLocalParts() {
+            when(user.getEmail()).thenReturn("ab@example.com");
+            when(config.getConfig()).thenReturn(Map.of(
+                    EmailConstants.SHOW_MASKED_EMAIL_ON_OTP_FORM, "true",
+                    EmailConstants.CODE_LENGTH, "6"));
+
+            form.authenticate(context);
+
+            verify(loginForm).setAttribute("maskedEmail", "a***@example.com");
+        }
+    }
+
     @Test
     @DisplayName("Should return correct brute force error message")
     void testDisabledByBruteForceError() {
