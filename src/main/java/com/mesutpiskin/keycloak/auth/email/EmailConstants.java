@@ -189,6 +189,18 @@ public final class EmailConstants {
 	 */
 	public static final String DEFAULT_MAILGUN_REGION = "US";
 
+
+	/**
+	 * Configuration key for showing a masked version of the user's email address
+	 * on the OTP form.
+	 */
+	public static final String SHOW_MASKED_EMAIL_ON_OTP_FORM = "showMaskedEmailOnOtpForm";
+
+	/**
+	 * Default setting for showing masked email on the OTP form.
+	 */
+	public static final boolean DEFAULT_SHOW_MASKED_EMAIL_ON_OTP_FORM = false;
+
 	/**
 	 * Configuration key for skipping the setup required action.
 	 * When enabled, users with an email address are considered configured

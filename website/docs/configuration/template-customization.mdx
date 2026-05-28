@@ -72,3 +72,10 @@ After editing templates or properties files, rebuild and redeploy: `mvn clean pa
 ## Supported Languages & Adding Translations
 
 The authenticator ships with 11 built-in languages. For the full list, how to add a new language, and a complete translation keys reference, see the [Localization guide](../localization).
+
+
+## OTP Login Form Note
+
+If you want to show the destination email address on the OTP login screen, prefer the built-in authenticator setting **Show masked email on OTP form** instead of relying on `${user.email!}` in the FreeMarker login template.
+
+When that setting is enabled, the authenticator passes a server-generated `maskedEmail` value to the form template. This is more reliable across Keycloak versions because the login template context does not always expose a populated `user` object during the OTP step.

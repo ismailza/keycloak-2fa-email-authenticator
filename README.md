@@ -12,6 +12,13 @@ Full documentation — installation, configuration, template customization, and 
 
 **https://mesutpiskin.github.io/keycloak-2fa-email-authenticator/**
 
+## Highlights
+
+- Email OTP login for Keycloak browser flows
+- Configurable code length, TTL, resend cooldown, and max attempts
+- Optional **masked email display** on the OTP form for better UX after the code is sent
+- Multiple email delivery backends: Keycloak SMTP, SendGrid, AWS SES, and Mailgun
+
 ## Quick Start
 
 The easiest way to get the JAR is via Maven Central. Use the version matching your Keycloak installation:

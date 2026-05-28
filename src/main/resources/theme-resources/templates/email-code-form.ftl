@@ -9,7 +9,7 @@
 
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcLabelWrapperClass!}">
-                    <label for="emailCode" class="${properties.kcLabelClass!}">${msg("emailOtpForm", otpLength)}</label>
+                    <label for="emailCode" class="${properties.kcLabelClass!}">${msg("emailOtpForm", otpLength)}<#if maskedEmail??>: <strong>${kcSanitize(maskedEmail)?no_esc}</strong></#if></label>
                 </div>
 
             <div class="${properties.kcInputWrapperClass!}">
