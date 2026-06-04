@@ -47,9 +47,9 @@ public class EmailAuthenticatorRequiredAction implements RequiredActionProvider,
 
     @Override
     public void evaluateTriggers(RequiredActionContext context) {
-        // isConfiguredFor() in EmailAuthenticatorCredentialProvider handles the skipSetup case
-        // (returns true when user has email and skipSetup is enabled), so auto-enrollment
-        // here is not needed and would create unwanted credentials in account management.
+        // No automatic trigger. Enrolment is voluntary via the account console — the
+        // login flow never requires it because EmailAuthenticatorForm.configuredFor
+        // treats any user with an email as eligible.
     }
 
     @Override

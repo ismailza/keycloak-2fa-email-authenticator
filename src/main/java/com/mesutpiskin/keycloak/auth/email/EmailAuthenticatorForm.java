@@ -428,10 +428,20 @@ public class EmailAuthenticatorForm extends AbstractUsernameFormAuthenticator
         return true;
     }
 
+    /**
+     * Eligibility for this authenticator is based on the user having a usable email
+     * address — no explicit enrollment step is required. A user with an email can
+     * always receive an email OTP. This keeps the authenticator decoupled from the
+     * realm-level credential store and makes the plugin appear as a valid option in
+     * "Try Another Way" alternative lists.
+     */
     @Override
     public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
-        EmailAuthenticatorCredentialProvider provider = getCredentialProvider(session);
-        return provider != null && provider.isConfiguredFor(realm, user, getType(session));
+        if (user == null) {
+            return false;
+        }
+        String email = user.getEmail();
+        return email != null && !email.isBlank();
     }
 
     @Override
@@ -440,9 +450,16 @@ public class EmailAuthenticatorForm extends AbstractUsernameFormAuthenticator
                 EmailAuthenticatorCredentialProviderFactory.PROVIDER_ID);
     }
 
+    /**
+     * No automatic required action is registered. Users with an email are already
+     * considered configured (see {@link #configuredFor}); users without an email
+     * cannot enrol via this authenticator and the flow surfaces the missing-email
+     * error at {@link #authenticate} time. Account-UI enrolment remains available
+     * via {@link EmailAuthenticatorRequiredAction}.
+     */
     @Override
     public void setRequiredActions(KeycloakSession session, RealmModel realm, UserModel user) {
-        user.addRequiredAction(EmailAuthenticatorRequiredAction.PROVIDER_ID);
+        // intentional no-op
     }
 
     @Override

@@ -202,16 +202,19 @@ public final class EmailConstants {
 	public static final boolean DEFAULT_SHOW_MASKED_EMAIL_ON_OTP_FORM = false;
 
 	/**
-	 * Configuration key for skipping the setup required action.
-	 * When enabled, users with an email address are considered configured
-	 * without needing to complete the enrollment flow. Useful for
-	 * admin-enforced 2FA where all users already have email addresses.
+	 * @deprecated The {@code skipSetup} configuration flag is no longer read by the
+	 * authenticator. Email-OTP eligibility is now derived solely from whether the
+	 * user has an email address, so explicit enrolment is never required for the
+	 * login flow. The constant is kept so existing realm configurations containing
+	 * the key continue to deserialize without error.
 	 */
+	@Deprecated
 	public static final String SKIP_SETUP = "skipSetup";
 
 	/**
-	 * Default skip-setup setting (enabled, so users with an email skip enrollment).
+	 * @deprecated See {@link #SKIP_SETUP}.
 	 */
+	@Deprecated
 	public static final boolean DEFAULT_SKIP_SETUP = true;
 
 	/**
