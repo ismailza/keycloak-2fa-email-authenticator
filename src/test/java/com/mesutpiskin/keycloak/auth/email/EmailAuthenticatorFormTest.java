@@ -72,34 +72,52 @@ class EmailAuthenticatorFormTest {
     }
 
     @Test
-    @DisplayName("Should be configured for user with valid credential")
-    void testConfiguredFor_withValidSetup() {
+    @DisplayName("configuredFor returns true when the user has a non-blank email")
+    void testConfiguredFor_userWithEmail() {
         KeycloakSession session = mock(KeycloakSession.class);
         RealmModel realm = mock(RealmModel.class);
         UserModel user = mock(UserModel.class);
+        when(user.getEmail()).thenReturn("alice@example.com");
 
-        // This test verifies the method can be called without exceptions
-        assertDoesNotThrow(() -> {
-            try {
-                authenticator.configuredFor(session, realm, user);
-            } catch (NullPointerException e) {
-                // Expected when credential provider is not available
-                // This is acceptable for unit test
-            }
-        });
+        assertTrue(authenticator.configuredFor(session, realm, user),
+                "Users with an email address must be eligible to receive an OTP without enrolment");
     }
 
     @Test
-    @DisplayName("Should set required action on user")
-    void testSetRequiredActions() {
+    @DisplayName("configuredFor returns false when the user has no email")
+    void testConfiguredFor_userWithoutEmail() {
+        KeycloakSession session = mock(KeycloakSession.class);
+        RealmModel realm = mock(RealmModel.class);
+        UserModel user = mock(UserModel.class);
+        when(user.getEmail()).thenReturn(null);
+
+        assertFalse(authenticator.configuredFor(session, realm, user),
+                "Users without an email cannot use the email authenticator");
+    }
+
+    @Test
+    @DisplayName("configuredFor returns false for blank emails")
+    void testConfiguredFor_blankEmail() {
+        KeycloakSession session = mock(KeycloakSession.class);
+        RealmModel realm = mock(RealmModel.class);
+        UserModel user = mock(UserModel.class);
+        when(user.getEmail()).thenReturn("   ");
+
+        assertFalse(authenticator.configuredFor(session, realm, user),
+                "Blank emails should be treated as no email");
+    }
+
+    @Test
+    @DisplayName("setRequiredActions is a no-op; the login flow never triggers enrolment")
+    void testSetRequiredActions_isNoOp() {
         KeycloakSession session = mock(KeycloakSession.class);
         RealmModel realm = mock(RealmModel.class);
         UserModel user = mock(UserModel.class);
 
         authenticator.setRequiredActions(session, realm, user);
 
-        // Verify that addRequiredAction was called with the correct provider ID
-        verify(user).addRequiredAction(EmailAuthenticatorRequiredAction.PROVIDER_ID);
+        verify(user, never()).addRequiredAction(EmailAuthenticatorRequiredAction.PROVIDER_ID);
+        verify(user, never()).addRequiredAction(anyString());
     }
 
     @Test
