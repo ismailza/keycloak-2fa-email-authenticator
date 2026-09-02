@@ -236,6 +236,13 @@ podman logs -f keycloak-test | grep "SIMULATION MODE"
 4. Expected: the OTP screen shows a masked destination such as `t***r@example.com`
 5. Confirm the full email address is not displayed
 
+The same setting applies to enrollment. To verify that screen:
+
+1. Add the **Set up Email Authenticator** required action to a user without the credential
+2. Login as that user and click **Enable Email Authenticator**
+3. Expected: the verification screen shows the same masked destination, in the same format
+4. Enter a wrong code until the attempt limit is reached — the masked address stays visible
+
 ### Test 7 — Language Support
 
 Verify that all 11 built-in translations display correctly.

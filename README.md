@@ -16,7 +16,7 @@ Full documentation — installation, configuration, template customization, and 
 
 - Email OTP login for Keycloak browser flows
 - Configurable code length, TTL, resend cooldown, and max attempts
-- Optional **masked email display** on the OTP form for better UX after the code is sent
+- Optional **masked email display** on the OTP and enrollment verification forms for better UX after the code is sent
 - Multiple email delivery backends: Keycloak SMTP, SendGrid, AWS SES, and Mailgun
 
 ## Related projects
