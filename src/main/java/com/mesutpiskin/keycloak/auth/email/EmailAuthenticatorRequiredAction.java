@@ -159,12 +159,7 @@ public class EmailAuthenticatorRequiredAction implements RequiredActionProvider,
                 int attempts = incrementAttempts(session);
                 if (attempts >= maxAttempts) {
                     resetSetupCode(session);
-                    var form = context.form();
-                    form.setAttribute("maxAttemptsReached", true);
-                    form.setAttribute("codeLength", resolvePositiveInt(configMap, EmailConstants.CODE_LENGTH,
-                            EmailConstants.DEFAULT_LENGTH));
-                    form.setError(Messages.TOO_MANY_ATTEMPTS);
-                    context.challenge(form.createForm(VERIFY_TEMPLATE));
+                    challengeVerifyForm(context, true, Messages.TOO_MANY_ATTEMPTS);
                 } else {
                     challengeVerifyForm(context, Messages.INVALID_CODE);
                 }
@@ -302,17 +297,33 @@ public class EmailAuthenticatorRequiredAction implements RequiredActionProvider,
     }
 
     private void challengeVerifyForm(RequiredActionContext context, String error, Object... errorParams) {
+        challengeVerifyForm(context, false, error, errorParams);
+    }
+
+    private void challengeVerifyForm(RequiredActionContext context, boolean maxAttemptsReached, String error,
+            Object... errorParams) {
         AuthenticationSessionModel session = context.getAuthenticationSession();
         var form = context.form();
 
-        Long remaining = getRemainingCooldownSeconds(session);
-        if (remaining != null && remaining > 0L) {
-            form.setAttribute("resendAvailableInSeconds", remaining);
+        if (maxAttemptsReached) {
+            form.setAttribute("maxAttemptsReached", true);
+        } else {
+            Long remaining = getRemainingCooldownSeconds(session);
+            if (remaining != null && remaining > 0L) {
+                form.setAttribute("resendAvailableInSeconds", remaining);
+            }
         }
 
         Map<String, String> configMap = findAuthenticatorConfig(context);
         int codeLength = resolvePositiveInt(configMap, EmailConstants.CODE_LENGTH, EmailConstants.DEFAULT_LENGTH);
         form.setAttribute("codeLength", codeLength);
+
+        if (EmailMaskUtils.isMaskedEmailEnabled(configMap)) {
+            String maskedEmail = EmailMaskUtils.maskEmailAddress(context.getUser());
+            if (maskedEmail != null) {
+                form.setAttribute("maskedEmail", maskedEmail);
+            }
+        }
 
         if (error != null) {
             form.setError(error, errorParams);
